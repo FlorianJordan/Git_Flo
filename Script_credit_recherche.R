@@ -27,7 +27,7 @@ bxp <- ggboxplot(
 bxp
 ####### mesure répété CO2 ####
 
-donnee_tableau_excel_CO2<-my_data <- read_excel("Donnee_CO2.xlsx")
+donnee_tableau_excel_CO2 <- read_excel("Donnee_CO2.xlsx")
 CO2<-donnee_tableau_excel_CO2
 summary(CO2)
 CO2$Facteur_vdt<- as.factor(CO2$Facteur_vdt) 
@@ -67,7 +67,7 @@ ggplot(CO2, aes(x=factor(CO2$Facteur_litiere), y=CO2$Incubation_24h_ppm2)) +
 ggplot(CO2, aes(x=factor(CO2$Facteur_vdt), y=CO2$Incubation_24h_ppm2)) +
   geom_boxplot()
 
-model.tukey<- aov(Incubation_24h_ppm2 ~ Facteur_litiere*Facteur_Chaux,data = CO2)
+model.tukey<- aov(Incubation_24h_ppm2 ~ Facteur_litiere*Facteur_vdt,data = CO2)
 TukeyHSD(model.tukey, conf.level=0.95)
 plot(TukeyHSD(model.tukey, conf.level=0.95), las = 2)
 
@@ -102,10 +102,10 @@ Graph_Tx + stat_compare_means(method = "t.test")+
   stat_pvalue_manual(Ttest_Tx, label = "p.adj.signif")
 
 ####### Facteur litiere CO2 et vdt #######
-Anova_Facteur_litiere_vdt<-aov(data=CO2,Incubation_24h_ppm2 ~ Facteur_litiere*Facteur_vdt+Error(ID))
+Anova_Facteur_litiere_vdt<-aov(data=CO2,Incubation_24h_ppm2 ~ Facteur_litiere+Facteur_vdt+Error(ID))
 summary(Anova_Facteur_litiere_vdt)
 bxp <- ggboxplot(
-  CO2, x = "Facteur_litiere", y = "Incubation_24h_ppm2",
+  CO2, x = "Facteur_litiere", y = "Incubation_24h_ppm",
   color = "Facteur_vdt", palette = "jco",xlab = "Mesures", ylab = "Quantité de CO2 produit (ppm/jour)",legend.title = "Vers de terre",ggtheme = theme_gray(),facet.by = "Tx"
 )
 bxp
