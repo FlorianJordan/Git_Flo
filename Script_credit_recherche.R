@@ -101,6 +101,14 @@ my_comparisons <- list( c("T1", "T2"),c("T1","T3"),c("T1","T4") )
 Graph_Tx + stat_compare_means(method = "t.test")+
   stat_pvalue_manual(Ttest_Tx, label = "p.adj.signif")
 
+####### Facteur litiere CO2 et vdt #######
+Anova_Facteur_litiere_vdt<-aov(data=CO2,Incubation_24h_ppm2 ~ Facteur_litiere*Facteur_vdt+Error(ID))
+summary(Anova_Facteur_litiere_vdt)
+bxp <- ggboxplot(
+  CO2, x = "Facteur_litiere", y = "Incubation_24h_ppm2",
+  color = "Facteur_vdt", palette = "jco",xlab = "Mesures", ylab = "Quantité de CO2 produit (ppm/jour)",legend.title = "Vers de terre",ggtheme = theme_gray(),facet.by = "Tx"
+)
+bxp
 
 ####### Facteur litiere CO2 #####
 # Anova répété
