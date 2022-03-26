@@ -6,6 +6,7 @@ dir()
 
 library(ggplot2)
 library(ggpubr)
+#dev.off() si erreur graph
 library(readxl)
 library(rstatix)
 library(ggpubr)
@@ -214,10 +215,15 @@ bxp <- ggboxplot(
 )
 bxp
 
+bxp <- ggboxplot(
+  N2O_ss_T0T1, x = "Facteur_litiere", y = "Incubation_24h_ppm",
+  color = "Facteur_Chaux", palette = "jco",xlab = "Litière", ylab = "Quantité de N2O produit (ppm/jour)",legend.title = "Chaux",ggtheme = theme_gray(),facet.by = "Facteur_vdt",short.panel.labs = FALSE,panel.labs = list(Facteur_vdt = c("Avec vers de terre", "Sans vers de terre"))
+)
+bxp
 
 Anova_N2O<-aov(data=N2O,Incubation_24h_ppm ~ Facteur_vdt*Facteur_litiere*Facteur_Chaux*Tx+Error(ID))
 summary(Anova_N2O)
-Anova_N2O<-aov(data=N2O_ss_T0T1,Incubation_24h_ppm ~ Facteur_litiere*Facteur_Chaux+Error(ID))
+Anova_N2O<-aov(data=N2O_ss_T0T1,Incubation_24h_ppm ~ Facteur_litiere*Facteur_Chaux*Tx+Error(ID))
 Anova_N2O<-aov(data=N2O,Incubation_24h_ppm ~ Facteur_litiere*Facteur_Chaux+Error(ID))
 summary(Anova_N2O)
 
