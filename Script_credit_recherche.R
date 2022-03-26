@@ -75,7 +75,7 @@ Incub_T1<-CO2[1:32,]
 Incub_T2<-CO2[33:64,]
 Incub_T3<-CO2[65:96,]
 Incub_T4<-CO2[97:128,]
-
+ 
 summary(aov(data=Incub_T1,Incubation_24h_ppm2 ~ Facteur_vdt+Facteur_litiere+Error(ID)))
 summary(aov(data=Incub_T2,Incubation_24h_ppm2 ~ Facteur_vdt+Facteur_litiere+Error(ID)))
 summary(aov(data=Incub_T3,Incubation_24h_ppm2 ~ Facteur_vdt+Facteur_litiere+Error(ID)))
@@ -229,3 +229,4 @@ Graph_litiereN2O
 my_comparisons <- list( c( "erable/hetre","peuplier") )
 Graph_litiereN2O + 
   stat_pvalue_manual(Ttest_Facteur_litiereN2O,y.position = 10000, label = "p.adj.signif",bracket.nudge.y = -50)
+ 
