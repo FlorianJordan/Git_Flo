@@ -206,7 +206,7 @@ bxp <- ggboxplot(
 )
 bxp
 
-N2O_ss_T0T1<-N2O[65:128,]
+N2O_ss_T0T1<-N2O[65:160,]
 
 bxp <- ggboxplot(
   N2O, x = "Facteur_litiere", y = "Incubation_24h_ppm",
@@ -217,11 +217,11 @@ bxp
 
 Anova_N2O<-aov(data=N2O,Incubation_24h_ppm ~ Facteur_vdt*Facteur_litiere*Facteur_Chaux*Tx+Error(ID))
 summary(Anova_N2O)
-Anova_N2O<-aov(data=N2O_ss_T0T1,Incubation_24h_ppm ~ Facteur_litiere*Facteur_Chaux*Tx*Facteur_vdt+Error(ID))
 Anova_N2O<-aov(data=N2O_ss_T0T1,Incubation_24h_ppm ~ Facteur_litiere*Facteur_Chaux+Error(ID))
+Anova_N2O<-aov(data=N2O,Incubation_24h_ppm ~ Facteur_litiere*Facteur_Chaux+Error(ID))
 summary(Anova_N2O)
 
-model.tukey<- aov(Incubation_24h_ppm ~ Facteur_litiere*Facteur_Chaux+Error(ID),data = N2O_ss_T0T1)
+model.tukey<- aov(Incubation_24h_ppm ~ Facteur_litiere*Facteur_Chaux*Facteur_vdt*Tx+Error(ID),data = N2O_ss_T0T1)
 TukeyHSD(model.tukey, conf.level=0.95)
 plot(TukeyHSD(model.tukey, conf.level=0.95), las = 2)
 
