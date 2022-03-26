@@ -155,6 +155,9 @@ Graph_vdt
 my_comparisons <- list( c("Avec", "Sans") )
 Graph_vdt + 
   stat_pvalue_manual(Ttest_Facteur_vdt, y.position = 10000, label = "p.adj.signif" ,bracket.nudge.y = -50)
+
+model.tukey<- aov(Incubation_24h_ppm ~ Facteur_vdt,data = N2O)
+TukeyHSD(model.tukey, conf.level=0.95)
 ####### mesure répété N2O ####
 donnee_tableau_excel_N2O<-my_data <- read_excel("Donnee_N2O.xlsx")
 N2O<-donnee_tableau_excel_N2O
