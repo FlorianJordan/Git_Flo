@@ -37,6 +37,12 @@ CO2$Facteur_Chaux<- as.factor(CO2$Facteur_Chaux)
 CO2$Tx<- as.factor(CO2$Tx) 
 summary(CO2)
 
+mean(CO2$Incubation_24h_ppm2[CO2$Facteur_vdt=="Avec"])
+((mean(N2O$Incubation_24h_ppm[N2O$Facteur_vdt=="Avec"&N2O$Facteur_litiere=="peuplier"&N2O$Facteur_Chaux=="sans"])*100)/mean(N2O$Incubation_24h_ppm[N2O$Facteur_vdt=="Avec"&N2O$Facteur_litiere=="erable/hetre"&N2O$Facteur_Chaux=="sans"]))-100
+mean(N2O_ss_T0T1$Incubation_24h_ppm[N2O_ss_T0T1$Facteur_vdt=="Avec"&N2O_ss_T0T1$Facteur_litiere=="peuplier"&N2O_ss_T0T1$Facteur_Chaux=="avec"])
+mean(N2O_ss_T0T1$Incubation_24h_ppm[N2O_ss_T0T1$Facteur_vdt=="Avec"&N2O_ss_T0T1$Facteur_litiere=="erable/hetre"&N2O_ss_T0T1$Facteur_Chaux=="avec"])
+
+
 
 CO2 %>% group_by(Facteur_vdt, Facteur_litiere,Facteur_Chaux, Tx) %>%identify_outliers(Incubation_24h_ppm2)
 CO2 %>% group_by(Facteur_vdt, Facteur_litiere,Facteur_Chaux, Tx) %>% shapiro_test(Incubation_24h_ppm2)
@@ -158,7 +164,7 @@ my_comparisons <- list( c("Avec", "Sans") )
 Graph_vdt + 
   stat_pvalue_manual(Ttest_Facteur_vdt, y.position = 10000, label = "p.adj.signif" ,bracket.nudge.y = -50)
 
-model.tukey<- aov(Incubation_24h_ppm ~ Facteur_vdt,data = N2O)
+model.tukey<- aov(Incubation_24h_ppm ~ Facteur_vdt*Tx,data = N2O)
 TukeyHSD(model.tukey, conf.level=0.95)
 ####### mesure répété N2O ####
 donnee_tableau_excel_N2O<-my_data <- read_excel("Donnee_N2O.xlsx")
@@ -228,7 +234,7 @@ Anova_N2O<-aov(data=N2O_ss_T0T1,Incubation_24h_ppm ~ Facteur_litiere*Facteur_Cha
 Anova_N2O<-aov(data=N2O,Incubation_24h_ppm ~ Facteur_litiere*Facteur_Chaux+Error(ID))
 summary(Anova_N2O)
 
-model.tukey<- aov(Incubation_24h_ppm ~ Facteur_litiere*Facteur_Chaux*Facteur_vdt*Tx+Error(ID),data = N2O_ss_T0T1)
+model.tukey<- aov(Incubation_24h_ppm ~ Facteur_vdt*Tx+Error(ID),data = N2O)
 TukeyHSD(model.tukey, conf.level=0.95)
 plot(TukeyHSD(model.tukey, conf.level=0.95), las = 2)
 
