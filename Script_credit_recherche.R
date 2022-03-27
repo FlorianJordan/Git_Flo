@@ -68,7 +68,7 @@ ggplot(CO2, aes(x=factor(CO2$Facteur_litiere), y=CO2$Incubation_24h_ppm2)) +
 ggplot(CO2, aes(x=factor(CO2$Facteur_vdt), y=CO2$Incubation_24h_ppm2)) +
   geom_boxplot()
 
-model.tukey<- aov(Incubation_24h_ppm2 ~ Facteur_litiere*Facteur_vdt,data = CO2)
+model.tukey<- aov(Incubation_24h_ppm2 ~ Facteur_vdt,data = CO2)
 TukeyHSD(model.tukey, conf.level=0.95)
 plot(TukeyHSD(model.tukey, conf.level=0.95), las = 2)
 
@@ -107,7 +107,7 @@ Anova_Facteur_litiere_vdt<-aov(data=CO2,Incubation_24h_ppm2 ~ Facteur_litiere+Fa
 summary(Anova_Facteur_litiere_vdt)
 bxp <- ggboxplot(
   CO2, x = "Facteur_litiere", y = "Incubation_24h_ppm",
-  color = "Facteur_vdt", palette = "jco",xlab = "Mesures", ylab = "Quantité de CO2 produit (ppm/jour)",legend.title = "Vers de terre",ggtheme = theme_gray(),facet.by = "Tx"
+  color = "Facteur_vdt", palette = "jco",xlab = "Mesures", ylab = "Quantité de CO2 produit (ppm/jour)",legend.title = "Vers de terre",ggtheme = theme_gray()
 )
 bxp
 
@@ -130,7 +130,8 @@ Graph_litiere
 my_comparisons <- list( c( "erable/hetre","peuplier") )
 Graph_litiere + 
   stat_pvalue_manual(Ttest_Facteur_litiere,y.position = 10000, label = "p.adj.signif",bracket.nudge.y = -50)
-
+model.tukey<- aov(Incubation_24h_ppm ~ Facteur_litiere,data = CO2)
+TukeyHSD(model.tukey, conf.level=0.95)
 ####### Facteur vdt CO2 #####
 # Anova répété 
 Anova_Facteur_vdt<-aov(data=CO2,Incubation_24h_ppm2 ~ Facteur_vdt+Error(ID))
