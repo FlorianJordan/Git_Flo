@@ -46,7 +46,7 @@ mean(N2O_ss_T0T1$Incubation_24h_ppm[N2O_ss_T0T1$Facteur_vdt=="Avec"&N2O_ss_T0T1$
 
 CO2 %>% group_by(Facteur_vdt, Facteur_litiere,Facteur_Chaux, Tx) %>%identify_outliers(Incubation_24h_ppm2)
 CO2 %>% group_by(Facteur_vdt, Facteur_litiere,Facteur_Chaux, Tx) %>% shapiro_test(Incubation_24h_ppm2)
-model  <- lm(Incubation_24h_ppm2 ~ Facteur_vdt*Facteur_litiere*Tx, data = CO2)
+model  <- lm(Incubation_24h_ppm2 ~ Facteur_vdt*Facteur_litiere*Facteur_Chaux, data = CO2)
 # Créer un QQ plot des résidus
 ggqqplot(residuals(model))
 # Calculer le test de normalité de Shapiro-Wilk
@@ -61,11 +61,13 @@ Anova_Tot<-aov(data=CO2,Incubation_24h_ppm2 ~ Facteur_vdt*Facteur_litiere*Tx*Fac
 Anova_Tx<-aov(data=CO2,Incubation_24h_ppm2 ~ Tx+Error(ID))
 Anova_Facteur_litiere<-aov(data=CO2,Incubation_24h_ppm2 ~ Facteur_litiere+Error(ID))
 Anova_Facteur_vdt<-aov(data=CO2,Incubation_24h_ppm2 ~ Facteur_vdt+Error(ID))
+Anova_Tot<-aov(data=CO2,Incubation_24h_ppm2 ~ Facteur_vdt*Facteur_litiere*Facteur_Chaux)
 
 summary(Anova_Tot)
 summary(Anova_Tx)
 summary(Anova_Facteur_litiere)
 summary(Anova_Facteur_vdt)
+
 
 ggplot(CO2, aes(x=factor(CO2$Facteur_litiere), y=CO2$Incubation_24h_ppm2, fill=CO2$Facteur_vdt)) +
   geom_boxplot()
@@ -131,11 +133,19 @@ Ttest_Facteur_litiere
 #Graph
 Graph_litiere <- ggboxplot(CO2, x = "Facteur_litiere", y = "Incubation_24h_ppm2",
                            color = "Facteur_litiere", palette =c("#00AFBB", "#FC4E07"),
-                           shape = "Facteur_litiere",xlab = "Litière", ylab = "Quantité de CO2 produit (ppm/jour)",legend.title = "Litière",ggtheme = theme_gray(),facet.by = "Tx")
+                           shape = "Facteur_litiere",xlab = "Litière", ylab = "Quantité de CO2 produit (ppm/jour)",legend.title = "Litière",ggtheme = theme_gray())
 Graph_litiere
 my_comparisons <- list( c( "erable/hetre","peuplier") )
 Graph_litiere + 
   stat_pvalue_manual(Ttest_Facteur_litiere,y.position = 10000, label = "p.adj.signif",bracket.nudge.y = -50)
+
+Graph_litiere + geom_bracket(
+  xmin = "erable/hetre", xmax = "peuplier", y.position = 9500,
+  label = "*", 
+  tip.length = c(0.02, 0.02), vjust = 0
+)
+
+
 model.tukey<- aov(Incubation_24h_ppm ~ Facteur_litiere,data = CO2)
 TukeyHSD(model.tukey, conf.level=0.95)
 ####### Facteur vdt CO2 #####
@@ -158,12 +168,14 @@ Ttest_Facteur_vdt
 #Graph
 Graph_vdt <- ggboxplot(CO2, x = "Facteur_vdt", y = "Incubation_24h_ppm2",
                        color = "Facteur_vdt", palette =c("#00AFBB", "#FC4E07"),
-                       shape = "Facteur_vdt",xlab = "Vers de terre", ylab = "Quantité de CO2 produit (ppm/jour)",legend.title = "Vers de terre",ggtheme = theme_gray(),facet.by = "Tx")
+                       shape = "Facteur_vdt",xlab = "Vers de terre", ylab = "Quantité de CO2 produit (ppm/jour)",legend.title = "Vers de terre",ggtheme = theme_gray())
 Graph_vdt
 my_comparisons <- list( c("Avec", "Sans") )
 Graph_vdt + 
   stat_pvalue_manual(Ttest_Facteur_vdt, y.position = 10000, label = "p.adj.signif" ,bracket.nudge.y = -50)
-
+Graph_vdt + 
+  stat_pvalue_manual(Anova_Facteur_vdt, y.position = 10000, label = "Pr(>F)" ,bracket.nudge.y = -50)
+stat_
 model.tukey<- aov(Incubation_24h_ppm ~ Facteur_vdt*Tx,data = N2O)
 TukeyHSD(model.tukey, conf.level=0.95)
 ####### mesure répété N2O ####
