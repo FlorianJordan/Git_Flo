@@ -144,7 +144,11 @@ Graph_litiere + geom_bracket(
   label = "*", 
   tip.length = c(0.02, 0.02), vjust = 0
 )
-
+  
+  
+Graph_litiere +
+stat_compare_means(label = "p.signif", method = "t.test",
+                   ref.group = "0.5")
 
 model.tukey<- aov(Incubation_24h_ppm ~ Facteur_litiere,data = CO2)
 TukeyHSD(model.tukey, conf.level=0.95)
@@ -168,9 +172,17 @@ Ttest_Facteur_vdt
 #Graph
 Graph_vdt <- ggboxplot(CO2, x = "Facteur_vdt", y = "Incubation_24h_ppm2",
                        color = "Facteur_vdt", palette =c("#00AFBB", "#FC4E07"),
-                       shape = "Facteur_vdt",xlab = "Vers de terre", ylab = "Quantité de CO2 produit (ppm/jour)",legend.title = "Vers de terre",ggtheme = theme_gray())
+                       shape = "Facteur_vdt",xlab = "Vers de terre", ylab = "Quantité de CO2 produit (ppm/jour)",legend.title = "Vers de terre",ggtheme = theme_gray(),facet.by = "Tx")
 Graph_vdt
 my_comparisons <- list( c("Avec", "Sans") )
+
+Graph_vdt + geom_bracket(
+  xmin = "Avec", xmax = "Sans", y.position = 9500,
+  label = "*", 
+  tip.length = c(0.02, 0.02), vjust = 0
+)
+Graph_vdt + stat_compare_means(method = "anova", label.y = 40)
+
 Graph_vdt + 
   stat_pvalue_manual(Ttest_Facteur_vdt, y.position = 10000, label = "p.adj.signif" ,bracket.nudge.y = -50)
 Graph_vdt + 
