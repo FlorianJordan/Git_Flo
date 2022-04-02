@@ -3,7 +3,7 @@ getwd()
 setwd("C:/Users/flori/Desktop/dossier_mere/universite/Session_3/ECL516_Ecologie_animale")
 setwd("~/Desktop/maitrise /Credit_de_recherche")
 dir()
-
+library(grid)
 library(ggplot2)
 library(ggpubr)
 #dev.off() si erreur graph
@@ -114,11 +114,22 @@ Graph_Tx + stat_compare_means(method = "t.test")+
 Anova_Facteur_litiere_vdt<-aov(data=CO2,Incubation_24h_ppm2 ~ Facteur_litiere+Facteur_vdt+Error(ID))
 summary(Anova_Facteur_litiere_vdt)
 bxp <- ggboxplot(
-  CO2, x = "Facteur_litiere", y = "Incubation_24h_ppm",
-  color = "Facteur_vdt", palette = "jco",xlab = "Mesures", ylab = "Quantité de CO2 produit (ppm/jour)",legend.title = "Vers de terre",ggtheme = theme_gray()
+  CO2, x = "Facteur_litiere", y = "Incubation_24h_ppm2",
+  color = "Facteur_vdt", palette = "jco",xlab = "Litière", ylab = "Quantité de CO2 produit (ppm/jour)",legend.title = "Vers de terre",ggtheme = theme_gray()
 )
 bxp
-
+bxp + geom_bracket(
+  xmin = "erable/hetre", xmax = "peuplier", y.position = 9500,
+  label = "*",
+  tip.length = c(0.02, 0.02), vjust = 0, 
+)
+grid.draw(linesGrob(x = unit(c(0.235, 0.53), "npc"), 
+                    y = unit(c(0.96, 0.96), "npc"),
+                    gp = gpar(lwd = 1)))
+grid.draw(textGrob(label = "*",
+                   x = unit(c(0.235 + 0.53)/2, "npc"),
+                   y = unit(0.965, "npc"),
+                   gp = gpar(cex = 1)))
 ####### Facteur litiere CO2 #####
 # Anova répété
 Anova_Facteur_litiere<-aov(data=CO2,Incubation_24h_ppm2 ~ Facteur_litiere+Error(ID))
@@ -172,7 +183,7 @@ Ttest_Facteur_vdt
 #Graph
 Graph_vdt <- ggboxplot(CO2, x = "Facteur_vdt", y = "Incubation_24h_ppm2",
                        color = "Facteur_vdt", palette =c("#00AFBB", "#FC4E07"),
-                       shape = "Facteur_vdt",xlab = "Vers de terre", ylab = "Quantité de CO2 produit (ppm/jour)",legend.title = "Vers de terre",ggtheme = theme_gray(),facet.by = "Tx")
+                       shape = "Facteur_vdt",xlab = "Vers de terre", ylab = "Quantité de CO2 produit (ppm/jour)",legend.title = "Vers de terre",ggtheme = theme_gray())
 Graph_vdt
 my_comparisons <- list( c("Avec", "Sans") )
 
@@ -251,6 +262,11 @@ bxp <- ggboxplot(
   color = "Facteur_Chaux", palette = "jco",xlab = "Litière", ylab = "Quantité de N2O produit (ppm/jour)",legend.title = "Chaux",ggtheme = theme_gray(),facet.by = "Facteur_vdt",short.panel.labs = FALSE,panel.labs = list(Facteur_vdt = c("Avec vers de terre", "Sans vers de terre"))
 )
 bxp
+bxp + geom_bracket(
+  xmin = "erable/hetre", xmax = "peuplier", y.position = 5.2,
+  label = "*", 
+  tip.length = c(0.02, 0.02), vjust = 0
+)
 
 Anova_N2O<-aov(data=N2O,Incubation_24h_ppm ~ Facteur_vdt*Facteur_litiere*Facteur_Chaux*Tx+Error(ID))
 summary(Anova_N2O)
@@ -270,3 +286,5 @@ my_comparisons <- list( c( "erable/hetre","peuplier") )
 Graph_litiereN2O + 
   stat_pvalue_manual(Ttest_Facteur_litiereN2O,y.position = 10000, label = "p.adj.signif",bracket.nudge.y = -50)
  
+N2O_ss_T0T1<-N2O_ss_T0T1["Facteur_Chaux"==avec,]
+N2O_ss_T0T1<-N2O_ss_T0T1[N2O_ss_T0T1$Facteur_Chaux=="avec",]
