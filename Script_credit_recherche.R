@@ -125,7 +125,7 @@ bxp + geom_bracket(
 )
 grid.draw(linesGrob(x = unit(c(0.235, 0.53), "npc"), 
                     y = unit(c(0.96, 0.96), "npc"),
-                    gp = gpar(lwd = 1)))
+                    gp = gpar(lwd = 1)),arrow(angle = 90,length = unit(0.3,"inches" )))
 grid.draw(textGrob(label = "*",
                    x = unit(c(0.235 + 0.53)/2, "npc"),
                    y = unit(0.965, "npc"),
