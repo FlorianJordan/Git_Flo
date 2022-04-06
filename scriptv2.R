@@ -84,7 +84,7 @@ Incub_T1<-CO2[1:32,]
 Incub_T2<-CO2[33:64,]
 Incub_T3<-CO2[65:96,]
 Incub_T4<-CO2[97:128,]
- 
+
 summary(aov(data=Incub_T1,Incubation_24h_ppm2 ~ Facteur_vdt+Facteur_litiere+Error(ID)))
 summary(aov(data=Incub_T2,Incubation_24h_ppm2 ~ Facteur_vdt+Facteur_litiere+Error(ID)))
 summary(aov(data=Incub_T3,Incubation_24h_ppm2 ~ Facteur_vdt+Facteur_litiere+Error(ID)))
@@ -155,11 +155,11 @@ Graph_litiere + geom_bracket(
   label = "*", 
   tip.length = c(0.02, 0.02), vjust = 0
 )
-  
-  
+
+
 Graph_litiere +
-stat_compare_means(label = "p.signif", method = "t.test",
-                   ref.group = "0.5")
+  stat_compare_means(label = "p.signif", method = "t.test",
+                     ref.group = "0.5")
 
 model.tukey<- aov(Incubation_24h_ppm ~ Facteur_litiere,data = CO2)
 TukeyHSD(model.tukey, conf.level=0.95)
@@ -246,11 +246,11 @@ Ttest_Facteur_litiereN2O
 N2O_ss_T0T1<-N2O[65:160,]
 N2O_ss_T0T1_lit<-N2O_ss_T0T1[N2O_ss_T0T1$Facteur_vdt=="Avec",]
 
-  
+
 bxp <- ggboxplot(
   N2O_ss_T0T1_lit, x = "Facteur_litiere", y = "Incubation_24h_ppm2",
   color = "Facteur_litiere", palette = "jco",xlab = "Litière", ylab = "Quantité de N2O produit (ppm/jour)",legend.title = "Litière",ggtheme = theme_gray(),facet.by = "Facteur_vdt"
-,outlier.shape=NA)
+  ,outlier.shape=NA)
 bxp
 bxp + geom_bracket(
   xmin = "erable/hetre", xmax = "peuplier", y.position = 4.5,
@@ -258,8 +258,40 @@ bxp + geom_bracket(
   tip.length = c(0.02, 0.02), vjust = 0
 )
 
+bxp <- ggboxplot(
+  N2O, x = "Tx", y = "Incub_7",
+  color = "Facteur_vdt", palette = "jco",xlab = "Mesures", ylab = "Quantité de N2O produit (ppm/semaine)",legend.title = "Vers de terre",ggtheme = theme_gray()
+  ,outlier.shape=NA)
+bxp
+  grid.draw(linesGrob(x = unit(c(0.405, 0.455), "npc"), 
+                    y = unit(c(0.63, 0.63), "npc"),
+                    gp = gpar(lwd = 1)))
+grid.draw(textGrob(label = "***",
+                   x = unit(c(0.405 + 0.455)/2, "npc"),
+                   y = unit(0.635, "npc"),
+                   gp = gpar(cex = 1)))
+  grid.draw(linesGrob(x = unit(c(0.54, 0.593), "npc"), 
+                    y = unit(c(0.63, 0.63), "npc"),
+                    gp = gpar(lwd = 1)))
+grid.draw(textGrob(label = "***",
+                   x = unit(c(0.54 + 0.593)/2, "npc"),
+                   y = unit(0.635, "npc"),
+                   gp = gpar(cex = 1)))
+  grid.draw(linesGrob(x = unit(c(0.675, 0.725), "npc"), 
+                    y = unit(c(0.63, 0.63), "npc"),
+                    gp = gpar(lwd = 1)))
+grid.draw(textGrob(label = "***",
+                   x = unit(c(0.675 + 0.725)/2, "npc"),
+                   y = unit(0.635, "npc"),
+                   gp = gpar(cex = 1)))
+
+
+
+
+
+
 bxp <- ggboxplot(  N2O_ss_T0T1, x = "Facteur_litiere", y = "Incubation_24h_ppm",
-  color = "Facteur_Chaux", palette = "jco",xlab = "Litière", ylab = "Quantité de N2O produit (ppm/jour)",legend.title = "Chaux",ggtheme = theme_gray()
+                   color = "Facteur_Chaux", palette = "jco",xlab = "Litière", ylab = "Quantité de N2O produit (ppm/jour)",legend.title = "Chaux",ggtheme = theme_gray()
 )
 bxp
 
@@ -291,22 +323,22 @@ Graph_litiereN2O
 my_comparisons <- list( c( "erable/hetre","peuplier") )
 Graph_litiereN2O + 
   stat_pvalue_manual(Ttest_Facteur_litiereN2O,y.position = 10000, label = "p.adj.signif",bracket.nudge.y = -50)
- 
+
 
 N2O_ss_T0T1<-N2O_ss_T0T1["Facteur_Chaux"==avec,]
 N2O_ss_T0T1<-N2O_ss_T0T1[N2O_ss_T0T1$Facteur_Chaux=="avec",]
 
 N2O_ss_T0T1_Inc2<-N2O[65:160,]
 bxp <- ggboxplot(
-  N2O_ss_T0T1_Inc2, x = "Facteur_litiere", y = "Incubation_24h_ppm2",
-  color = "Facteur_Chaux", palette = "jco",xlab = "Litière", ylab = "Quantité de N2O produit (ppm/jour)",legend.title = "Chaux",ggtheme = theme_gray(),facet.by = "Facteur_vdt",short.panel.labs = FALSE,panel.labs = list(Facteur_vdt = c("Avec vers de terre", "Sans vers de terre")),outlier.shape=NA
+  N2O_ss_T0T1_Inc2, x = "Facteur_litiere", y = "Incub_7_2",
+  color = "Facteur_Chaux", palette = "jco",xlab = "Litière", ylab = "Quantité de N2O produit (ppm/semaine)",legend.title = "Chaux",ggtheme = theme_gray(),facet.by = "Facteur_vdt",short.panel.labs = FALSE,panel.labs = list(Facteur_vdt = c("Avec vers de terre", "Sans vers de terre")),outlier.shape=NA
 )
 bxp
-grid.draw(linesGrob(x = unit(c(0.14, 0.305), "npc"), 
+grid.draw(linesGrob(x = unit(c(0.15, 0.315), "npc"), 
                     y = unit(c(0.615, 0.615), "npc"),
                     gp = gpar(lwd = 1)))
 grid.draw(textGrob(label = "*",
-                   x = unit(c(0.14 + 0.305)/2, "npc"),
+                   x = unit(c(0.15 + 0.315)/2, "npc"),
                    y = unit(0.62, "npc"),
                    gp = gpar(cex = 1)))
 
