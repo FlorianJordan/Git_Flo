@@ -252,7 +252,7 @@ bxp
 N2O_ss_T0T1<-N2O[65:160,]
 
 bxp <- ggboxplot(
-  N2O, x = "Facteur_litiere", y = "Incubation_24h_ppm",
+  N2O_ss_T0T1, x = "Facteur_litiere", y = "Incubation_24h_ppm",
   color = "Facteur_Chaux", palette = "jco",xlab = "Litière", ylab = "Quantité de N2O produit (ppm/jour)",legend.title = "Chaux",ggtheme = theme_gray()
 )
 bxp
@@ -268,7 +268,7 @@ bxp + geom_bracket(
   tip.length = c(0.02, 0.02), vjust = 0
 )
 
-Anova_N2O<-aov(data=N2O,Incubation_24h_ppm ~ Facteur_vdt*Facteur_litiere*Facteur_Chaux*Tx+Error(ID))
+Anova_N2O<-aov(data=N2O_ss_T0T1_Inc2,Incubation_24h_ppm2 ~ Facteur_vdt*Facteur_litiere*Facteur_Chaux*Tx)
 summary(Anova_N2O)
 Anova_N2O<-aov(data=N2O_ss_T0T1,Incubation_24h_ppm ~ Facteur_litiere*Facteur_Chaux*Tx+Error(ID))
 Anova_N2O<-aov(data=N2O,Incubation_24h_ppm ~ Facteur_litiere*Facteur_Chaux+Error(ID))
@@ -286,5 +286,21 @@ my_comparisons <- list( c( "erable/hetre","peuplier") )
 Graph_litiereN2O + 
   stat_pvalue_manual(Ttest_Facteur_litiereN2O,y.position = 10000, label = "p.adj.signif",bracket.nudge.y = -50)
  
+
 N2O_ss_T0T1<-N2O_ss_T0T1["Facteur_Chaux"==avec,]
 N2O_ss_T0T1<-N2O_ss_T0T1[N2O_ss_T0T1$Facteur_Chaux=="avec",]
+
+N2O_ss_T0T1_Inc2<-N2O[65:160,]
+bxp <- ggboxplot(
+  N2O_ss_T0T1_Inc2, x = "Facteur_litiere", y = "Incubation_24h_ppm2",
+  color = "Facteur_Chaux", palette = "jco",xlab = "Litière", ylab = "Quantité de N2O produit (ppm/jour)",legend.title = "Chaux",ggtheme = theme_gray(),facet.by = "Facteur_vdt",short.panel.labs = FALSE,panel.labs = list(Facteur_vdt = c("Avec vers de terre", "Sans vers de terre")),outlier.shape=NA
+)
+bxp
+grid.draw(linesGrob(x = unit(c(0.14, 0.305), "npc"), 
+                    y = unit(c(0.615, 0.615), "npc"),
+                    gp = gpar(lwd = 1)))
+grid.draw(textGrob(label = "*",
+                   x = unit(c(0.14 + 0.305)/2, "npc"),
+                   y = unit(0.62, "npc"),
+                   gp = gpar(cex = 1)))
+
