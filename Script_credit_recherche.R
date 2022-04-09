@@ -42,7 +42,8 @@ mean(CO2$Incubation_24h_ppm2[CO2$Facteur_vdt=="Avec"])
 mean(N2O_ss_T0T1$Incubation_24h_ppm[N2O_ss_T0T1$Facteur_vdt=="Avec"&N2O_ss_T0T1$Facteur_litiere=="peuplier"&N2O_ss_T0T1$Facteur_Chaux=="avec"])
 mean(N2O_ss_T0T1$Incubation_24h_ppm[N2O_ss_T0T1$Facteur_vdt=="Avec"&N2O_ss_T0T1$Facteur_litiere=="erable/hetre"&N2O_ss_T0T1$Facteur_Chaux=="avec"])
 
-
+((mean(CO2$Incubation_24h_ppm2[CO2$Facteur_vdt=="Avec"&CO2$Facteur_litiere=="peuplier"])*100)/mean(CO2$Incubation_24h_ppm2[CO2$Facteur_vdt=="Sans"&CO2$Facteur_litiere=="peuplier"]))-100
+mean(CO2$Incubation_24h_ppm2[CO2$Facteur_vdt=="Avec"&CO2$Facteur_litiere=="peuplier"])
 
 CO2 %>% group_by(Facteur_vdt, Facteur_litiere,Facteur_Chaux, Tx) %>%identify_outliers(Incubation_24h_ppm2)
 CO2 %>% group_by(Facteur_vdt, Facteur_litiere,Facteur_Chaux, Tx) %>% shapiro_test(Incubation_24h_ppm2)
@@ -76,7 +77,7 @@ ggplot(CO2, aes(x=factor(CO2$Facteur_litiere), y=CO2$Incubation_24h_ppm2)) +
 ggplot(CO2, aes(x=factor(CO2$Facteur_vdt), y=CO2$Incubation_24h_ppm2)) +
   geom_boxplot()
 
-model.tukey<- aov(Incubation_24h_ppm2 ~ Facteur_vdt,data = CO2)
+model.tukey<- aov(Incubation_24h_ppm2 ~ Facteur_vdt*Facteur_litiere,data = CO2)
 TukeyHSD(model.tukey, conf.level=0.95)
 plot(TukeyHSD(model.tukey, conf.level=0.95), las = 2)
 
@@ -115,7 +116,7 @@ Anova_Facteur_litiere_vdt<-aov(data=CO2,Incubation_24h_ppm2 ~ Facteur_litiere+Fa
 summary(Anova_Facteur_litiere_vdt)
 bxp <- ggboxplot(
   CO2, x = "Facteur_litiere", y = "Incubation_24h_ppm2",
-  color = "Facteur_vdt", palette = "jco",xlab = "Litière", ylab = "Quantité de CO2 produit (ppm/jour)",legend.title = "Vers de terre",ggtheme = theme_gray()
+  color = "Facteur_vdt",xlab = "Litière", ylab = "Quantité de CO2 produit (ppm/jour)",legend.title = "Vers de terre",ggtheme = theme_gray()
 )
 bxp
 bxp + geom_bracket(
@@ -123,12 +124,19 @@ bxp + geom_bracket(
   label = "*",
   tip.length = c(0.02, 0.02), vjust = 0, 
 )
-grid.draw(linesGrob(x = unit(c(0.235, 0.53), "npc"), 
-                    y = unit(c(0.96, 0.96), "npc"),
+grid.draw(linesGrob(x = unit(c(0.233, 0.53), "npc"), 
+                    y = unit(c(0.97, 0.97), "npc"),
                     gp = gpar(lwd = 1)),arrow(angle = 90,length = unit(0.3,"inches" )))
 grid.draw(textGrob(label = "*",
-                   x = unit(c(0.235 + 0.53)/2, "npc"),
-                   y = unit(0.965, "npc"),
+                   x = unit(c(0.233 + 0.53)/2, "npc"),
+                   y = unit(0.973, "npc"),
+                   gp = gpar(cex = 1)))
+grid.draw(linesGrob(x = unit(c(0.233, 0.36), "npc"), 
+                    y = unit(c(0.95, 0.95), "npc"),
+                    gp = gpar(lwd = 1)),arrow(angle = 90,length = unit(0.3,"inches" )))
+grid.draw(textGrob(label = "*",
+                   x = unit(c(0.233 + 0.36)/2, "npc"),
+                   y = unit(0.952, "npc"),
                    gp = gpar(cex = 1)))
 ####### Facteur litiere CO2 #####
 # Anova répété
